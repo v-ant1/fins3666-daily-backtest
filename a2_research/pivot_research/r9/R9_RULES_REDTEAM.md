@@ -1,0 +1,12 @@
+﻿# R9 rules red-team review
+
+The rules put useful limits on refinement, but several details can still let selection favor a lucky result or make the final test hard to audit.
+
+- The rule requires a selection rule before any variant runs, yet the text does not say where that rule must be recorded or prove it predates the first run. Keep a dated, immutable selection record. The chosen statistic also needs a precise definition: “net Sharpe” could mean the strategy’s Sharpe or the Sharpe of daily excess returns versus EW30. State the return series, annualization, missing-day handling, and tie precision before results exist.
+- The 12-variant log has no explicit append-only or hash requirement. “Timestamp before it is run” can be gamed if a run partially reveals results, crashes, or is relabeled. Record each variant’s exact code/rules hash and start time before launch; after launch, append its completion or failure and never erase the row. Count any launch that may have exposed outcomes.
+- The DSR is required for every development result, but its return series, sample frequency, annualization, benchmark treatment, and exact full trial count are not fixed here. Freeze those inputs and the R6 trial count before comparing variants. DSR reporting does not remove the selection bias from choosing the best of up to 12.
+- The cost/gross-edge filter is undefined when gross edge is zero or negative, and can be unstable near zero. Define gross edge and the ratio calculation up front; treat non-positive or near-zero denominators as ineligible rather than letting a negative ratio pass. Define active-share averaging and turnover aggregation the same way for every variant.
+- Rule 6 says “bootstrap p” without specifying the resampling unit, block length, number of draws, seed, return series, or p-value formula. It also does not define the DSR sample used for the holdout. Freeze these conventions before access. “Once” needs a durable attempt marker written before any holdout input is opened; otherwise a failed run or deleted output could permit a retry.
+- Approval currently means a file exists, but it is not tied to the frozen J2 hash. Require the approval record to identify the exact J2 SHA-256 and verify it in the runner. Also bind the expected holdout inputs and runner version so a different data file or modified code cannot silently become the confirmatory test.
+
+These gaps are governance and reproducibility risks; resolving them does not authorize a holdout run. The worker must remain unable to inspect holdout or pre-cutoff data.

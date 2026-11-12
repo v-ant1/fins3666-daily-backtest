@@ -1,0 +1,82 @@
+# AH — Foreign-session pressure mapped to issuer revenue exposure
+
+**Status: SCREEN ONLY — no signal outcomes, no return calculations, and no variant is authorized by this document.**
+
+## Identity and immutable-path preflight
+
+- **Proposed short name and mechanism:** AH foreign-session pressure; foreign-market price moves completed before the U.S. open, weighted by each Dow issuer's latest point-in-time geographic revenue shares, may transmit pressure into that issuer's U.S. cash-session return.
+- **Exact new output path:** `r6_ideas/AH_foreign_session.md`.
+- **Target preflight:** this exact path did not exist immediately before creation. `AH_foreign_session` is new; decision 190 assigns this screen.
+- **Development date range:** 2020-11-27 through 2026-10-30; earliest permissible worker input date 2020-11-27. All Yahoo chart requests below were restricted at request time to 2024-06-03 through 2024-06-10 (exclusive end). The only issuer filing inspected is Apple's 2024 Form 10-K, filed 2024-11-01.
+- No price/value before 2020-11-27, sealed holdout path, or sealed-basket ETF data was read. EWJ and EWG are named as examples in the task but are in the sealed basket and were not queried; no ETF price series was loaded. The candidate can use local foreign-market index series instead.
+- No signal, forward return, IC, portfolio return, or other outcome was calculated.
+
+## 1. Overlap with prior work
+
+The nearest screen is **P1** (`specs/r6_prereg/P1.md`): P1 uses each stock's own trailing 21-session overnight return and predicts its next calendar month's open-to-close return. AH instead uses returns of foreign regional markets, interacted with issuer-level geographic revenue fractions, and predicts a U.S. session return; its pressure source is external and the exposure map is a firm-specific economic link. It is not a renamed P1 signal, although both distinguish overnight information from the U.S. session and share the broader timing intuition. P1's reported planning case was already far below criterion 4, which counsels against optimistic transfer here.
+
+R5 ETF-flow proposals concern primary-market creations/redemptions and security holdings; they do not use completed foreign-market index returns or issuer revenue exposures. U's cross-asset screen used aggregate Treasury/credit/commodity channels and failed on issuer-level exposure mapping. AH is distinct in its proposed data and mapping, but geographic exposure is still a difficult point-in-time measurement problem. Decision 190 explicitly assigned the foreign-investor/ADR-hour analogue; this screen narrows it to foreign session indices × reported revenue shares. No overlap was found that makes it an already-run signal. **Overlap gate: PASS for conceptual novelty; caveat that it shares P1's overnight-to-U.S.-session timing.**
+
+## 2. Exact pressure measure and dated data source
+
+A single candidate, if a coordinator ever authorizes preregistration, would be:
+
+1. At the first U.S. trading session of each ISO week, form at the U.S. open. For each Dow constituent, freeze its latest geographic revenue-share vector from a 10-K/10-Q accepted by the SEC before that open. Do not use the filing's fiscal period end as its public date; use its EDGAR acceptance/publication timestamp. Do not backfill from future filings.
+2. Fix regions and index proxies before any outcome access: Japan / Nikkei 225, Germany / DAX, and euro area / EURO STOXX 50. Use only local-market close-to-close returns over the five most recent completed local sessions available before that U.S. open; align each market's calendar and timezone explicitly. An index close is only eligible if its observation was public before the U.S. formation open. Do not use U.S.-listed ETF closes as foreign-session returns because their close occurs after the U.S. session.
+3. For issuer `i`, compute `AH[i,t] = Σ_r revenue_share[i,r,t] × foreign_index_return[r,t]`, where weights are nonnegative shares of disclosed geographic revenue and normalized over only the predeclared mapped regions. If geographic reporting is too coarse to distinguish a region, that region's weight is missing, not inferred from headquarters or ADR listings. Require a valid exposure and all three region returns; otherwise the issuer has no score that week. Positive AH is the preregistered sign.
+4. Predict that issuer's U.S. open-to-close return from the same first session's open to close; a later long-only portfolio would rebalance weekly. The score and all weights are frozen by the U.S. open, so same-day U.S. outcomes cannot enter the signal.
+
+**Sources and feasibility checks.** Free daily index-history access was checked using date-restricted Yahoo Finance chart requests (chart API: `https://query1.finance.yahoo.com/v8/finance/chart/`). For the development-only request window 2024-06-03 to 2024-06-10 exclusive, the response contained six Nikkei 225 timestamp entries (2024-06-03 through 2024-06-10) and five each for DAX and EURO STOXX 50 (2024-06-03 through 2024-06-07). Only timestamps/ranges were inspected, not prices. These counts confirm that date-filtered daily index observations are retrievable for a short sample, not that the full development series or point-in-time publication timestamps are validated. Yahoo data are free but may be revised; an actual design should archive raw responses and validate local exchange timestamps.
+
+A free SEC example, Apple's 2024 Form 10-K, reports U.S., China (including Hong Kong and Taiwan), and “Other Countries” net sales, not Japan, Germany, and euro-area revenues separately. Filing: [Apple Form 10-K, filed 2024-11-01](https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm). This establishes that a free, timestamped filing can contain geographic revenue, but also demonstrates why the intended three-region map cannot be assumed. EDGAR company submissions and XBRL APIs are documented at [SEC EDGAR APIs](https://www.sec.gov/edgar/sec-api-documentation); company-specific segment labels and the distribution of usable detail across all 30 Dow issuers remain unverified. SEC filings are public; Yahoo's free interface has no assurance of immutable point-in-time data.
+
+**Verdict: FAIL.** The signal timing can be written without look-ahead, and daily foreign-index timestamps are available in a short development sample, but the free filing source does not establish complete, comparable, point-in-time regional exposures for enough Dow names. No outcome data were used.
+
+## 3. Point-in-time coverage and independent breadth
+
+Input-only coverage established so far:
+
+- **Foreign index series:** 3 intended proxies; in the one-week timestamp-only probe, Nikkei had 6 dated observations and DAX and EURO STOXX 50 had 5 each. This is a 5-day overlap at most, not a development sample coverage count.
+- **Issuer exposure files:** 1 2024 SEC Form 10-K inspected (Apple); its categories do not resolve all three intended regions. No complete Dow point-in-time filing panel was established.
+- **Usable issuer-weeks / names / complete cross-sectional dates:** unknown; no 30-name matching or filing extraction was run. The screen therefore verifies **zero** complete Dow issuer-week signal observations, not because there are necessarily none, but because none were established by the cheap probe.
+- **Independent breadth:** the three regional series are not three independent shocks: Germany is a component of the euro area proxy, and the indexes can share global risk drivers. The relevant count of independent geographic shocks and point-in-time issuer-exposure clusters is unmeasured. SIC2 can be computed from the staged dated mapping in a later authorized analysis, but no SIC2 counts are claimed here.
+
+The most directly related paper, Quoc H. Nguyen, “Geographic Momentum” (2012), reports 357,523 firm-month observations from August 1999 through January 2010 and maps firms to 47 MSCI country/region indexes using Compustat geographic sales. It is a monthly study and uses CRSP/Compustat/IBES/MSCI inputs. Its main reported effect is 135 basis points per month for the long-short portfolio in the paper's abstract; the paper also reports that the effect is strongest among smaller firms, firms with low analyst coverage or institutional ownership, and geographically complex firms. That is poor transfer evidence for today's 30 largest U.S. companies and this weekly U.S. session horizon. Source: [paper PDF](https://finance.business.uconn.edu/wp-content/uploads/sites/723/2014/08/Geographic-Momentum.pdf), [SSRN record](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1921537).
+
+Other evidence is mixed or adverse. Li, Richardson, and Tuna, “Macro to Micro: Country Exposures, Firm Fundamentals and Stock Returns,” *Journal of Accounting and Economics* 58(1) (2014), 1–20, DOI [10.1016/j.jacceco.2014.04.005](https://doi.org/10.1016/j.jacceco.2014.04.005), use global firm-years from 1998–2010 and country exposure/fundamental measures; this is not daily foreign-session pressure. Rapach, Strauss, and Zhou, “International Stock Return Predictability: What Is the Role of the United States?” *Journal of Finance* 68(4) (2013), DOI [10.1111/jofi.12041](https://doi.org/10.1111/jofi.12041), find that lagged U.S. returns predict foreign-country returns while foreign returns have limited predictive ability for U.S. returns. Menzly and Ozbas, “Market Segmentation and Cross-predictability of Returns,” *Journal of Finance* 65 (2010), 1555–1580, DOI [10.1111/j.1540-6261.2010.01578.x](https://doi.org/10.1111/j.1540-6261.2010.01578.x), document supplier/customer industry lead-lag effects, an adjacent but not geographic foreign-session mechanism.
+
+**Verdict: FAIL.** Cross-sectional coverage and independent breadth are not verified, and the direct paper's strongest effects are in firms unlike the Dow target.
+
+## 4. Effective breadth and power at a sourced plausible effect
+
+No independent source provides a weekly, Dow-mega-cap rank IC for foreign-index returns weighted by point-in-time revenue shares, nor a directly comparable per-week top-half active return. Nguyen's 135 bp/month figure is an old monthly long-short portfolio result using paid/proprietary CRSP, Compustat, IBES, and MSCI data; it is not a plausible effect-size estimate for this proposed weekly long-only score. Its finding that smaller, less-covered firms drive stronger effects makes direct transfer to Dow mega-caps especially optimistic. The international lead-lag evidence is adverse for foreign-to-U.S. forecasting.
+
+For reproducibility of the requested power check, the generic harness was run with a hypothetical daily design: `python r4_harness/power_sim.py --assets 500 --dates 1488 --horizon 2 --signal-autocorrelation 0.2 --ic-sd 0.20538 --mean-ic 0.02 --simulations 5000 --seed 20261111`. It returned simulated power **0.893** (Monte Carlo SE 0.00437), mean effective N **1,240**, and 80%-power MDE **0.01657**. The 0.02 mean IC is hypothetical, not sourced; the 500 assets, 1,488 daily dates, AR(1)=0.2 and IC SD=0.20538 are planning inputs, not measured AH coverage. The harness does not model the three correlated region shocks or SIC2 clustering. This result is not power for AH and cannot cure the absence of a sourced, matching effect or verified sample breadth.
+
+**Verdict: FAIL.** There is no signal-matched large-cap plausible effect with which to make a defensible power claim; the hypothetical harness sensitivity is disclosed but is not evidence of adequate AH power.
+
+## 5. Criterion-4 portfolio feasibility first
+
+A plausible execution design would be a **weekly rank-weighted top-half Dow tilt** (top 15, weights proportional to ranks 1 through 15; 55% active share versus EW30), using the same point-in-time names with valid signal and execution prices. Rebalance at the first U.S. open of each week; do not use a U.S.-listed foreign ETF's same-day closing price. Charge 0.05% per dollar of traded notional and enforce the goal's turnover-or-cost rule; if using a 50% turnover cap, scale toward target weights pro rata. Compare with the same-date EW30 and apply the registered R6 endpoint family, block bootstrap, and cumulative-count DSR if this ever reaches preregistration.
+
+The shape audit `report_drafts/CRITERION4_BOUND_BY_SHAPE.md` gives a weekly rank-weighted top-half 80%-power hurdle of rank IC **0.074** at assumed signal autocorrelation ρ=0.2. Under that audit's seeded score-transition design, expected total-notional turnover is 116% per weekly rebalance, while annual costs are 24.1% of gross active edge; this meets that audit's cost-ratio alternative but does **not** meet a 50% turnover cap without additional scaling. Those are synthetic planning results, not observations. The audit assumes 30 names, six years, a 24-test Holm family, a 10-session daily bootstrap approximation, and synthetic return dispersion/volatility; it explicitly cautions that portfolio-path bootstrap p-values are not observed. The reported R6 goal remains positive net excess return, Sharpe above EW30, and one-sided block-bootstrap p<0.05 after full-family Holm, with the applicable turnover-or-cost condition; none is relaxed here.
+
+No documented estimate for AH can be translated to a weekly rank IC, post-cost Dow excess Sharpe, or bootstrap probability. A monthly long-short result from 1999–2010 cannot be scaled into a weekly long-only Dow forecast without unsupported assumptions about alpha persistence, rank ordering, cross-region dependence, exposures, and turnover. Consequently there is no defensible estimate that AH reaches IC 0.074, positive net excess, or criterion-4's inferential Sharpe hurdle. **Criterion-4 verdict: FAIL — infeasible on documented evidence.**
+
+## 6. Holdout availability and protocol
+
+This screen required no holdout path or holdout-specific input. No sealed Dow prices, signals, returns, or country ETF series were opened, queried, plotted, or calculated. The coordinator-only one-shot holdout protocol under goal criterion 5 would apply only after a direction is preregistered, code and input manifests are hash-verified, and development gates pass; the coordinator alone handles the sealed Dow interval. Worker availability checks before then must be limited to approved roster/row-count evidence, with no return or signal values.
+
+**Verdict: PASS for screen protocol.**
+
+## Final screen decision
+
+**Overall: STOP — FAIL.** The mechanism is distinct enough from P1 to be novel, and the timing can avoid look-ahead, but complete point-in-time geographic revenue weights and independent breadth are unverified, the most direct documented effect is old/monthly/long-short and concentrated outside mega-caps, the foreign-to-U.S. literature is mixed or adverse, and no sourced effect clears the weekly criterion-4 bound.
+
+Evidence that could change this decision would be a free and auditable point-in-time geographic-revenue panel with consistent regional categories for most Dow names, plus independent post-2015 large-cap evidence for the same foreign-session × revenue exposure signal at a weekly rank IC near 0.074 (or a justified alternative portfolio effect that meets the fixed criterion after costs). Until then, do not preregister or run a portfolio.
+
+**Reviewer/date:** R6 screen, 2026-11-11.
+
+## Proposed replacement wording for the Task-spec brief contract in `ORCHESTRATION.md`
+
+> **Idea screening and file safety.** Before any signal pull or preregistration, complete `specs/IDEA_SCREEN_TEMPLATE.md`. The screen must establish novelty, exact signal and source, point-in-time coverage and independent breadth, power at an independently sourced plausible effect, criterion-4 portfolio feasibility after costs and Holm adjustment, and holdout availability. A failed gate ends the work; do not start a runner or register a variant. Task specs must name exact output paths using forward slashes and must say to check that each path does not exist before writing; never overwrite or reuse an existing artifact name. Worker data paths must begin no earlier than 2020-11-27. Do not inspect outcomes during screening or access sealed holdout values. If a path, date, or data rule is ambiguous, stop and request coordinator review before any pull.

@@ -1,0 +1,31 @@
+﻿# R10 S3 — Cross-stock spillover screen
+
+**Status: no-go for freezing.** Five distinct, pre-registered monthly hypotheses were measured once on development data only. None meets the declared gate (net excess > 0, Newey–West t ≥ 2, and 2010–2015 haircut-adjusted pass probability ≥ 30%). No sealed holdout files or pre-2020-11-27 price/return values were read.
+
+The shared screen was validated on synthetic inputs before the single outcome run (`spillover_screen.py --synthetic`; PASS), then run once for all five ideas on `r9/data/J2_DEV_FROM_20201127.npz` and the staged SEC Item 2.02 clock. The scored period was 2020-11-27 through 2026-10-30, with 58 non-overlapping 21-session portfolios. The benchmark was equal-weight PIT S&P 500 over identical windows; primary cost was 10 bp one-way on turnover. Newey–West t uses lag 3. Annualized Sharpe is the Sharpe of monthly net excess over the matching benchmark, scaled by √12. Power is the requested one-sided .05 / 80% MDE and normal pass probability after halving the measured mean; it tests the positive-mean gate only.
+
+| Idea (frozen direction) | N | Mean net excess / NW t | Net Sharpe vs EW PIT | One-way turnover / mean cost | Cost share of |gross excess| | Positive years (2021→2026) | 2010–15 plan: N / MDE / haircut pass probability | Selected names priced | Holdout construction status |
+|---|---:|---:|---:|---:|---:|---|---|---:|---|
+| **S3-01** SIC2 12-minus-1 industry momentum; long top quintile groups | 58 | **+0.410% / 1.217** | +0.532 | 35.0% / 3.50 bp | 7.9% | 5/6: `++−+++` | 58 / 0.871% / 14.45% | 4,889 / 5,057 (96.7%) | Price + PIT roster needed; Tiingo/Alpaca route is feasible in principle, but full 2010–15 identity coverage is unverified. |
+| **S3-02** SIC2 one-month industry momentum; long top quintile groups | 58 | −0.181% / −0.622 | −0.230 | 83.9% / 8.39 bp | 86.3% | 2/6: `+−−−−+` | 58 / 0.892% / 2.89% | 4,760 / 4,940 (96.4%) | Same price + PIT roster route; full historical identity coverage is unverified. |
+| **S3-03** Buy within-industry laggards where top-quintile leaders were positive | 58 | −0.214% / −1.027 | −0.456 | 80.4% / 8.04 bp | 60.1% | 2/6: `−−−+−+` | 58 / 0.531% / 1.59% | 3,758 / 3,779 (99.4%) | Same price + PIT roster route; full historical identity coverage is unverified. |
+| **S3-04** SIC2 positive-return breadth; long positive names in top-quintile groups | 58 | −0.274% / −0.893 | −0.303 | 84.4% / 8.44 bp | 44.5% | 2/6: `−−+−−+` | 58 / 1.022% / 2.40% | 3,541 / 3,545 (99.9%) | Same price + PIT roster route; full historical identity coverage is unverified. |
+| **S3-05** Prior-month same-SIC2 peer response to Item 2.02 filings; long peers in top-quintile groups | 58 | −0.077% / −0.223 | −0.102 | 89.6% / 8.96 bp | 683.3% | 3/6: `−++−+−` | 58 / 0.851% / 3.95% | 3,237 / 3,395 (95.3%) | Requires price + PIT roster and SEC submissions metadata. SEC metadata is a feasible source in principle; 2010–15 item/timestamp and universe coverage were not verified. No FINRA or 13F fields are required. |
+
+## GO list
+
+None.
+
+S3-01 is the only positive-mean result, but its NW t is 1.22 and its haircut pass probability is 14.45%; it fails both remaining gates. The other four have negative net excess means. These are development screens, not evidence that cross-stock spillovers are absent.
+
+## Data and protocol limits
+
+- The 2010–2015 planning sample size is projected mechanically from the 58 development formations over six calendar years; it is not observed holdout event coverage. MDEs and pass probabilities are scenario estimates, not full qualification probabilities. Tiingo coverage work has checked only a subset of historical symbols and did not establish membership-window adjusted-price completeness; each price-only design therefore remains unverified for a real holdout. S3-05 additionally needs historical SEC event metadata to be verified.
+- The NPZ has missing selected-name entry/exit bars. The fixed run omitted those names and renormalized the remaining selected book; the table reports each count. No Alpaca gap-fill request or outcome rerun was made after the single run. The staged benchmark used the same available NPZ bars.
+- The SEC event reader filtered rows by date before using them for signals, but it iterated the full staged clock, which includes dates earlier than 2020-11-27. No pre-boundary price, return, or filing-body field was read, and no such event entered a formation; nevertheless, pre-boundary timestamp/date fields were evaluated during filtering. This is a protocol deviation and independently bars freezing S3-05.
+- The SEC clock only maps event dates that exactly match a session in the staged price axis; weekend/holiday filings were not shifted to the next session. Thus S3-05 is incomplete even within the allowed development period.
+- The common runner's terminal liquidation charge used 0.5 one-way turnover for its final book rather than a full 1.0 liquidation. This understates total reported costs by 5 bp once per series (about 0.086 bp per monthly observation); it was not corrected or rerun after outcome access. It does not change any gate decision.
+- A non-executable draft S3-03 paragraph was explicitly withdrawn in the trial log before outcomes and is not counted. The screen contains five actual registered hypotheses. Three other proposals failed the pre-outcome data gate: ETF bars did not contain creations/redemptions, no staged major-customer network extraction existed, and the permitted panel had no ownership or market-cap field for the common-owner/size-weighted proxy.
+
+The frozen rules, five registrations, correction, and synthetic gate are recorded in `specs/r10_trial_log.md` and `specs/r10_decisions.md`. Per-formation saved results are in `dev_outcomes.json`; the shared code is `spillover_screen.py`.
+- **Schedule implementation deviation:** the common runner formed at session indices 252, 273, … in the permitted panel, rather than anchoring its first formation to the first eligible calendar month-end as the frozen prose specified. The cadence remained every 21 sessions and all windows were non-overlapping, but formation dates differ from calendar month ends. No rerun or post-outcome schedule correction was made; the deviation is disclosed and independently bars freezing.

@@ -1,0 +1,23 @@
+# Testing and validation
+
+The original pressure-plus-heat strategy was tested before the new directions were chosen. Its five-day next-open-to-close pressure blend had a mean rank correlation of **+0.0042 (Newey–West t = 0.43)**; the heat score was **−0.0058 (t = −0.48)**. The top-five portfolio gained 30.5 percentage points over EW30 before costs but finished 18.4 points behind after costs; gross Sharpe was 0.85 versus 0.92 for EW30, and it traded 161.2% of NAV per rebalance versus 2.4% for EW30 [Round 4 postmortem](../r4_L1/POSTMORTEM.md). These results motivate testing the pressure mechanism before simulating a portfolio.
+
+Before any new signal is compared with future returns, its hypothesis, predicted direction and horizon, inputs, variants, selection rule, placebos and portfolio rules are written in a pre-registration. Once the coordinator has checked the input data, the specification is frozen with a date and file hash. A failed primary mechanism test ends that direction; a secondary variant cannot replace it. This is intended to prevent changes made in response to results.
+
+Development uses point-in-time Dow constituents and daily data from 27 November 2020 to 30 October 2026. The holdout is separate: workers do not access its prices, returns or signals. The coordinator runs the frozen procedure once on 1 January 2010 to 31 October 2020. The available roster has gaps: KFT, DWDP and WBA are missing, and UTX is represented by the RTX lineage. The benchmark is equal-weighted over available names, and the coordinator reports the DWDP membership window both included and excluded.
+
+Testing starts with the proposed mechanism. Each date, the signal is ranked against the pre-registered future return across eligible stocks; for D4 and D5 this is the next-open-to-close return through session five. The date-level Spearman correlations are tested for a positive mean using Newey–West standard errors with the registered lag of four. Newey and West’s method accounts for serial dependence in the test series. Placebos break the proposed link while preserving relevant graph features: D4 rewires or randomizes links and shifts the graph in time; D5 reverses or permutes industry links and shifts them in time. A signal must have the predicted sign and meet its registered t-statistic threshold, while the placebos must not show the same effect. Only then does the portfolio test proceed.
+
+Portfolios use the registered holdings and rebalance schedule, next-session-open execution, an equal-weight benchmark over the available names, and a cost of 0.05% per dollar traded. Turnover is capped at 50% of NAV per rebalance. The portfolio must have positive net excess return and a higher net Sharpe than its benchmark; inference uses the registered 10-session circular block bootstrap with 5,000 draws. A development result passes the portfolio test only if its p-value remains below 0.05 after Holm correction across every pre-registered inferential test in the goal. Holm’s procedure controls the chance of false positives across this family. The deflated Sharpe ratio is reported using the full budget of 30 variants to account for strategy selection; no parameter sweeps are allowed. The holdout pass threshold is p < 0.10, with the same frozen direction and Sharpe comparison. All tests, including failures, will be reported.
+
+One data-exposure incident is disclosed. During an availability check, L4 inadvertently saw rendered historical DWDP OHLCV rows on ChartExchange; no values were computed or used. L4 was therefore excluded from further hypothesis, pre-registration and implementation work. The holdout report will show results with and without DWDP’s membership window.
+
+| Stage | Registered check | Result |
+|---|---|---|
+| Original strategy | Five-day pressure and heat IC; after-cost portfolio versus EW30 | [INSERT ROUND 4 DIAGNOSTIC SUMMARY] |
+| Mechanism | Primary rank IC, Newey–West statistic and network/edge placebos | [INSERT D4/D5 RESULTS] |
+| Portfolio | Net excess return, Sharpe, turnover, costs and bootstrap inference | [INSERT DEVELOPMENT RESULTS] |
+| Multiple testing | Holm-adjusted p-values and DSR at 30 variants | [INSERT ADJUSTED RESULTS] |
+| Holdout | One coordinator-run, frozen test; disclose roster gaps and DWDP sensitivity | [INSERT HOLDOUT RESULTS OR INFEASIBILITY] |
+
+**Method references:** Newey and West (1987), [DOI](https://doi.org/10.2307/1913610); Holm (1979), [DOI](https://doi.org/10.2307/4615733); Bailey and López de Prado (2014), [DOI](https://doi.org/10.2139/ssrn.2460551); Antón and Polk (2014), [DOI](https://doi.org/10.1111/jofi.12149).

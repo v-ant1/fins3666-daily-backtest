@@ -1,0 +1,87 @@
+# R6 idea screen: Google Trends attention pressure
+
+**Status:** SCREEN ONLY — no signal outcomes, no return calculations, and no variant is authorized by this document.
+
+## Identity and immutable-path preflight
+
+- **Proposed short name and one-sentence mechanism:** AL Google Trends — an unusual increase in ticker-search interest may draw attention-sensitive retail buying, causing short-lived positive price pressure in the searched Dow stock.
+- **Exact new output path:** `r6_ideas/AL_google_trends.md`.
+- **Target absent before writing:** confirmed by `Test-Path` immediately before file creation; it did not exist.
+- **Name/registry check:** the AL direction is assigned to L2 in `specs/r6_decisions.md` item 202; no existing file with this output name was found. The nearest prior screen is `r6_ideas/S4-S6.md`.
+- **Development date range and earliest permissible worker-path date:** 2020-11-27 through 2026-10-30; nothing earlier than 2020-11-27 was requested or read.
+- **Path/date check:** only the project screen, idea registry, synthetic power code, Criterion-4 synthetic bound, and public Google Trends data explicitly limited to calendar 2024 were accessed. No holdout path, pre-window price panel, Holm-family file, or outcome data was opened. `R5_FINAL.md` was not searched because it contains outcome summaries and this task prohibits outcomes; overlap was screened against the existing idea files and direction registry instead.
+- **Preflight result:** the output path is unambiguous and new; the free data route still has point-in-time and comparability limitations described below.
+
+## 1. Overlap with prior work
+
+- **S4-S6:** `r6_ideas/S4-S6.md` screened public Wikipedia pageviews as a direct stock-attention proxy and described the same behavioral channel: unusual attention attracts individual investors, moves prices temporarily, and can later reverse. Google Trends measures search queries rather than pageviews, so it changes the observable but not the mechanism.
+- **P3/MAX and earlier attention family:** `specs/r6_decisions.md` identifies P3 as a prior attention proposal; item 134 says a later retail-attention direction overlapped earlier work. Extreme returns and searches differ as measures, but both test generic attention-linked demand rather than a distinct pressure-transmission channel.
+- **Current assignment:** decision 202 specifically assigns Google Trends ASVI and asks for a check against the S4-S6 Wikipedia work. The known overlap is therefore substantive, not a naming collision.
+- **Mechanism difference:** Google search is an explicit information-seeking measure and can spike before a pageview series does; however, that incremental timing is a conjecture, and the proposed mechanism still duplicates attention-induced buying pressure. It adds no new network through which pressure spreads.
+- **Verdict: FAIL.** This repeats the prior generic attention-pressure family with a different attention proxy. The source may be useful as a measurement comparison, but that is not enough to advance a new pressure variant.
+
+## 2. Exact pressure measure and dated data source
+
+A literature-faithful candidate would use the weekly Google Trends Search Volume Index (SVI) for a frozen query such as the exact stock ticker plus “stock,” US geography, and a fixed search category. At the first trading session after the most recently completed, fully available Trends week, define abnormal search volume as
+
+`ASVI[i,t] = log(SVI[i,t]) − log(median(SVI[i,t−1], …, SVI[i,t−8]))`.
+
+A higher ASVI would carry a **positive** sign for the next five-session stock return, reflecting the attention-induced buying-pressure hypothesis. If any term/week is zero or missing, the proposal would need a predeclared missing-value rule; it must not convert zero to an arbitrary epsilon after seeing returns. Google Trends’ weekly timestamps are UTC, and the sample pull labels its weekly bins on Sundays. A future test would therefore have to trade only after the complete bin is available, not on the preceding Friday close.
+
+The source is the free [Google Trends website](https://trends.google.com/trends/) and its public search-interest index. Google explains that Trends uses a sample, normalizes values to a 0–100 scale within the time and geography requested, and can report low-volume search terms as zero; it also warns of extra statistical noise for low-volume terms ([Google Trends data FAQ](https://support.google.com/trends/answer/4365533?hl=en)). These are relative search-interest values, not search counts or identified trades. Repeated website requests can use different samples; the website’s request-level normalization also makes separate batches difficult to compare without a common anchor.
+
+Google announced an official API in limited alpha in July 2025. Its documented API offers weekly aggregation and consistently scaled values, but only a rolling 1,800-day (~five-year) history, and access is limited to alpha testers ([Google Trends API announcement](https://developers.google.com/search/blog/2025/07/trends-api)). As of the project’s 2026-10-30 development end, that rolling API window cannot cover the full development period beginning 2020-11-27. The public website can show longer historical charts, but that does not provide a frozen point-in-time record of what values were available to an investor at each historical formation date.
+
+The only data feasibility pull for this screen was a public Trends request with `geo=US`, five exact search strings (`AAPL stock`, `MSFT stock`, `NVDA stock`, `JPM stock`, `CAT stock`), and the date range `2024-01-01` through `2024-12-31`. The request returned one Sunday-labeled bin dated 2023-12-31 at the start boundary; that bin was dropped before counting. The clipped pull contained 52 weekly bins, 2024-01-07 through 2024-12-29, for all five queries, with no missing or zero bins in this small sample. Distinct reported index levels were 11 for AAPL, 12 for MSFT, 35 for NVDA, 3 for JPM, and 2 for CAT. These five hand-selected issuers span technology, finance, and industrial businesses; the sample is not a Dow point-in-time roster, not representative of all Dow constituents, and does not establish independent event counts. The low distinct-level counts for JPM and CAT are consistent with coarse/low-volume measurement, not evidence of absence of attention.
+
+Da, Engelberg, and Gao, [“In Search of Attention,” *Journal of Finance* 66 (2011), 1461–1499, DOI 10.1111/j.1540-6261.2011.01679.x](https://doi.org/10.1111/j.1540-6261.2011.01679.x), use weekly Google search SVI for stocks in the Russell 3000 and report a one-standard-deviation ASVI increase associated with 18.742 basis points of next-week characteristic-adjusted return. Their sample is January 2004–June 2008, with 3,606 firms that entered the Russell 3000 and 834,627 firm-weeks; only 468,413 firm-weeks had valid SVI, because rarely searched tickers returned zero. The Fama–MacBeth regressions use Newey–West standard errors with eight lags. The positive price pressure is concentrated in the smaller half of the sample; the paper does not establish a comparable effect among mega-caps or report a rank IC for this application. The paper finds an eventual reversal within a year, but that longer-horizon pattern is not the proposed weekly portfolio signal.
+
+This screen computed **no ASVI values for the project Dow panel**, no forward returns, rank ICs, portfolio returns, signal outcomes, or event returns. It used only Trends input-coverage counts from the date-filtered 2024 sample.
+
+- **Verdict: FAIL for the proposed test as specified.** A small public pull is possible, but query-time normalization/sampling and lack of historical point-in-time snapshots make a comparable, investable full-window panel unverified. No free source or accession path for complete, frozen-at-formation historical SVI was identified.
+
+## 3. Point-in-time coverage and independent breadth
+
+- **Input-only sample counts:** 52 in-range weekly bins; five queries; 260 nonmissing positive name-week records; zero missing/zero records among those five queries after boundary clipping. This is a hand-picked 2024 feasibility sample, not coverage of the Dow panel.
+- **Independent events:** no event threshold or event definition is proposed at this screen stage, so no shock count was manufactured. The 260 name-week records are repeated observations, not 260 independent events.
+- **Independent SIC2 breadth:** not established. Three broad business groups occur in this five-name convenience sample, but five names and one year cannot support cluster-adjusted inference or point-in-time industry breadth for the 30-name Dow.
+- **Coverage and selection limits:** short/common query terms can be ambiguous; adding “stock” is an ex ante disambiguation attempt, not a validated ticker-to-search mapping. The 2024 sample was selected for a cheap feasibility check, not sampled from a point-in-time Dow roster. Changes in ticker, firm identity, search popularity, and index membership need dated crosswalks. Google reports sampled and normalized data, low-volume zeros, and additional noise at low volume. Historical values retrieved today cannot establish the exact information set available on each historical formation date.
+- **Literature transfer:** Da et al. study the Russell 3000 from 2004–2008 and find the pressure effect primarily in its smaller firms, not in a separately powered mega-cap group. Their 468,413 valid observations do not establish usable modern Dow breadth.
+- **Verdict: FAIL.** A full point-in-time roster/coverage and independent cluster count are unavailable from this sample; low-volume and query ambiguity remain material.
+
+## 4. Effective breadth and power at a sourced plausible effect
+
+The literature’s 18.742 bp next-week coefficient is not a rank IC and is not a clean mega-cap effect. It cannot be converted to a defensible Dow rank-IC effect without imposing an unsupported return-distribution mapping. The paper’s stated size heterogeneity points against assuming the full-sample coefficient transfers to large caps. Therefore there is **no sourced plausible rank IC that matches this signal, horizon, and large-cap setting**; this gate cannot pass.
+
+For a diagnostic only, I ran `r4_harness/power_sim.py` with 308 weekly observations (approximately the usable weekly dates in the six-year development span), five-session horizon/NW lag 4, signal autocorrelation 0.2, 5,000 simulations, and illustrative mean IC 0.0183. The 0.0183 value is an unsourced planning scenario, not an estimate from this project or a claim from Da et al. With the harness’s default date-level threshold `t ≥ 2`, power was 13.68% using 10 effective independent names and 31.86% using all 30 names; the corresponding 80%-power minimum effects were 0.0633 and 0.0353. Effective dates averaged 224 under the harness dependence adjustment.
+
+To show the multiple-testing constraint without opening the restricted Holm-family file, I used the conservative first-step cutoff for an **illustrative 24-test family**, `0.05/24` one-sided, with the same synthetic date-level noise assumptions and Newey–West lag 4. At an illustrative IC of 0.0183, simulated power was 2.92% with 10 effective names and 10.42% with 30; the approximate 80%-power IC hurdles were 0.0826 and 0.0460 respectively. This Holm calculation is a normal-cutoff approximation using the same synthetic design, not a new observed statistic. The current R6 family is growing; its exact size was deliberately not inspected because this task forbids opening the Holm-family file.
+
+The 10-effective-name case is a conservative clustering sensitivity, not a measured cluster count. Both cases demonstrate that the small scenario effect is underpowered; the 30-name result is optimistic because it assumes independent name-level ranks despite correlated attention and search demand. No rank-IC-sized, post-2020 mega-cap effect is supported by the cited source.
+
+- **Verdict: FAIL.** There is no matching sourced plausible effect for this large-cap test, and the illustrative effect has low power even before a full cluster model.
+
+## 5. Criterion-4 portfolio feasibility first
+
+- **Intended portfolio if this had passed:** weekly long-only rank-weighted top half of the 30 Dow names (15 held; the top 15 weights increase linearly with signal rank; lower 15 receive zero); 55% active share against EW30; EW30 benchmark; 0.05% cost per dollar traded on each side. A future frozen specification would have to enforce the standard missing-price/delayed-sale rule.
+- **Turnover:** no signal ranks or portfolio trades were calculated. The synthetic shape report estimates 116% average total-notional turnover at weekly score autocorrelation 0.2 for this shape, so it exceeds a 50% turnover cap; that report’s alternative gate required transaction costs to be less than 25% of gross active edge. At the bound, that alternative is just met under its own synthetic assumptions, but no evidence here supports an edge at that bound.
+- **Independent effect range and translation:** Da et al.’s 18.742 bp is a regression coefficient per standard deviation of ASVI in Russell 3000 week-one abnormal returns, not a rank IC, not an annual portfolio edge, and not a mega-cap estimate. I do not translate it into an excess Sharpe by assuming an outcome distribution. The source’s smaller-stock concentration makes direct transfer especially optimistic.
+- **Criterion-4 bound:** the project’s [synthetic Criterion-4 shape analysis](../report_drafts/CRITERION4_BOUND_BY_SHAPE.md) places the cheapest qualifying weekly shape at about 0.074 mean rank IC for RankTopHalf at ρ=0.2 (55% active share); it assumes 0.05% trading cost per dollar of total notional and 80% power against the Sharpe/bootstrap hurdle. That is far above the literature’s directly reported estimate in units that can be compared; because conversion is unavailable, the exact gap is **not identified**, and no positive feasibility case is made. No outcomes or Holm results were opened.
+- **Family/bootstrap requirement:** any future portfolio screen would need positive net excess return, Sharpe greater than EW30, one-sided block-bootstrap evidence with Holm adjustment for the then-current/growing R6 family, and the fixed turnover/cost and active-share rules. This screen has not relaxed those criteria.
+- **Verdict: FAIL — criterion-4 infeasible on present evidence.** There is no defensible, sourced effect capable of supporting the 0.074 weekly rank-IC hurdle after costs and the expanding Holm family.
+
+## 6. Holdout availability and protocol
+
+No holdout-specific input is needed for this screen, and no holdout path, roster, or value was read. If an idea were ever advanced, only the coordinator would run the single frozen test under [goal criterion 5](../specs/r4_goal.md): same sign, Sharpe above EW30, and one-sided p < 0.10 on the sealed 2010-01 to 2020-10 Dow holdout; if it is infeasible, L4 proposes a substitute for user approval before testing. A separate availability-only review would first have to establish that the exact Google Trends signal can be reconstructed over the holdout dates without leaking any holdout values to workers. Because the candidate fails earlier gates, no such request is made.
+
+- **Verdict: PASS as a no-access protocol statement.** The screen required no holdout data and did not access any.
+
+## Final screen decision
+
+- **Overall: STOP — FAIL.** The idea repeats the S4-S6/P3 attention-pressure family; historical Google Trends values do not provide a verified point-in-time full development panel; the published effect is from 2004–2008, concentrated in smaller stocks, and not a rank IC; synthetic power at an illustrative effect is far below the criterion-4 requirement. Do not register a variant, write a preregistration, or run a portfolio.
+- **What evidence could change this decision?** A coordinator-approved, free, stable and point-in-time historical API or archive covering the complete development window, with consistently scaled ticker-level weekly values and documented as-of availability; evidence that the signal adds a distinct pressure mechanism beyond existing attention proxies; and independent post-2010 mega-cap evidence reporting an effect commensurable with the weekly RankTopHalf hurdle, with cluster-adjusted power. None is established here.
+- **Reviewer/date:** L2 dispatched screen / 2026-11-11.
+
+## Proposed replacement wording for the Task-spec brief contract in `ORCHESTRATION.md`
+
+> **Idea screening and file safety.** Before any signal pull or preregistration, complete `specs/IDEA_SCREEN_TEMPLATE.md`. The screen must establish novelty, exact signal and source, point-in-time coverage and independent breadth, power at an independently sourced plausible effect, criterion-4 portfolio feasibility after costs and Holm adjustment, and holdout availability. A failed gate ends the work; do not start a runner or register a variant. Task specs must name exact output paths using forward slashes and must say to check that each path does not exist before writing; never overwrite or reuse an existing artifact name. Worker data paths must begin no earlier than 2020-11-27. Do not inspect outcomes during screening or access sealed holdout values. If a path, date, or data rule is ambiguous, stop and request coordinator review before any pull.

@@ -1,0 +1,5 @@
+﻿# Frozen choice: inverse-heat connectivity Round 3
+
+The pre-registered selector is the highest average daily Sharpe across the two selection universes, conditional on mean actual-notional turnover no greater than 50% per rebalance in each universe. `low15_inv` qualifies at 45.4% Dow turnover and 45.3% cross-asset turnover and has the highest eligible average Sharpe (0.595). It is frozen as: each 21 sessions, estimate the 63-session positive top-five union correlation graph and unit-time heat kernel, choose the 15 names with the lowest off-diagonal heat row sums, and assign weights proportional to inverse heat connectivity within those 15. Costs remain 5 bp per side on actual traded notional, with next-open fills.
+
+Selection values: Dow Sharpe 0.43 and cross-asset Sharpe 0.76; schedule-matched EW30 Sharpe 0.47 and 0.09. The higher-selection-Sharpe alternatives `low10_inv` and both recent-reversal variants were ineligible because one or both universes exceeded 50% turnover. No test-period results were used for this choice.

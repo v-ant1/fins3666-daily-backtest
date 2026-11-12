@@ -1,0 +1,76 @@
+# AL — pre-ex-dividend buying pressure
+
+**Status: SCREEN ONLY — STOP — FAIL.** Hartzmark and Solomon document price increases during the period before ex-dates, but the staged dividend panel does not consistently timestamp when those future ex-dates became public, and the candidate is a short-window timing variant of R1’s own-stock dividend schedule. The evidence is historical and broad-market; it does not establish a post-2020 Dow rank effect or a criterion-4 portfolio result. No signal or portfolio outcomes were calculated; a required broad registry search accidentally exposed an R1 decision-log result summary, which was excluded from this screen and is disclosed in the process note below. No result JSON or Holm-family file was opened and no holdout was accessed.
+
+## Identity and immutable-path preflight
+
+- **Mechanism:** dividend-seeking investors may buy an announced dividend payer between public dividend announcement and its ex-dividend date, creating temporary positive pressure that can reverse after the ex-date.
+- **Exact new output path:** `r6_ideas/AL_preexdate.md`. It did not exist before this screen.
+- **Development boundary:** 2020-11-27 through 2026-10-30 only; earliest permitted observation is 2020-11-27. No holdout input was needed or read.
+- **Input rule:** read the dividend parquet only with an `ex_date` predicate bounded to the development interval. No prices, returns or signal outcomes were joined.
+
+## 1. Overlap with prior work
+
+The nearest registered direction is **R1**, which predicts a payer month from that issuer’s own preceding-12-month ex-date schedule and tests the following calendar-month spread. AL would focus the holding window on the days before an ex-date. The timing is narrower, but the pressure source, issuer-level dividend dates, positive sign, and proposed Dow constituents are the same. Without verified announcement timing, it also cannot isolate the post-announcement/pre-ex-date interval that Hartzmark and Solomon identify.
+
+R6’s prior dividend-reinvestment screen in `r6_ideas/W_events.md` also considered dividend-seeking pressure and killed a new flow direction because the free panel records dividend dates rather than reinvestment orders. That screen treated it as duplicative of R1. The staged dividend history is therefore not a new source of buying-pressure variation.
+
+**Verdict: FAIL.** AL is a different holding window on R1’s same own-stock schedule, not an independent mechanism or information source. It also lacks sufficiently complete point-in-time announcement dates to distinguish an announced dividend run-up from a retrospective ex-date event study.
+
+## 2. Exact pressure measure and dated data source
+
+The intended hypothesis is positive pressure from announcement through the five trading sessions before ex-date, with a possible reversal after ex-date. A potentially tradable signal would be one for issuer *i* at close *t* when the issuer has a declared cash-dividend ex-date in the following five U.S. trading sessions; the event must be publicly announced no later than *t*. A long-only candidate would rank such issuers by a pre-specified event proximity or announced dividend amount scaled by prior close; however, adding an amount or event-distance score is not supported by this screen and would need its own fixed definition. The minimal version is a binary announced-event indicator, positive sign, with a five-session holding window ending before ex-date.
+
+The staged input is `r6_data/dividends/dividends_dev.parquet`, built from Yahoo dividend action history (queried via the free `yfinance` Python package) with supplementary Nasdaq dividend metadata where matched. The panel contains ex-date, per-share amount, optional declaration/record/payment dates, Nasdaq match and point-in-time membership fields. The yfinance API describes the dividend-action history returned by `Ticker.history(actions=True)` ([yfinance history API](https://ranaroussi.github.io/yfinance/reference/api/yfinance.Ticker.history.html)); it is a free, unofficial access wrapper, not a guaranteed licensed production feed. See `r6_data/dividends/QA.md` for the panel’s documented coverage and source limitations.
+
+**Development-only, input-only coverage:** reading only rows where `ex_date` is between 2020-11-27 and 2026-10-30 and matching to the date-overlapping intervals in `r6_D1/dow_pit_roster.csv` yielded **630 ex-date rows**, **31 point-in-time Dow tickers** over the interval, and **461 distinct ex-dates**. Only **162** of those rows have a declaration date no later than the ex-date, spread across **144 distinct declaration dates**. The 31 names reflect historical membership turnover, not 31 simultaneous constituents. This count is not a tested signal; it shows that only about one-quarter of staged Dow ex-date records have an observed pre-event declaration date. A row lacking a declaration date cannot be treated as an event known before formation. Yahoo historical ex-dates are retrospective event dates and, by themselves, do not establish that an investor could have known them on the proposed signal date.
+
+**Formation and prediction:** if the event were usable, form after the close of each U.S. session based only on a declaration date already public by that timestamp, enter no earlier than the next session, and exit before the ex-date. The exact trading-calendar mapping and public timestamp would have to be frozen. This screen uses no forward return, IC, portfolio return, or other outcome data.
+
+**Verdict: FAIL.** The exact signal is only valid when declaration timing is known; required date coverage is incomplete and the basic ex-date panel would otherwise introduce look-ahead.
+
+## 3. Point-in-time coverage and independent breadth
+
+The development-only join provides **630 issuer ex-date records** among **31 distinct point-in-time Dow names**, across **461 ex-date calendar dates**. Only **162 events / 144 declaration dates** have a supplied declaration date on or before ex-date. The 461 dates are event-time diversity, not independent observations: dividends recur quarterly or semiannually by issuer, several names can share a date, and event windows overlap. Without a complete PIT announced-date field, valid-signal count is at most the 162 dated records before checking whether declaration preceded each proposed five-session formation window. No separate SIC2 breadth statistic is claimed; this is a sparse issuer-event design, not a full monthly stock cross-section.
+
+The staged panel begins at 2020-06-01, but this screen uses none of its pre-2020-11-27 rows. The source panel’s ticker set originated from the point-in-time S&P roster, so Dow coverage depends on the separate PIT Dow roster mapping; current ticker identity must not be projected backward across membership changes. Empty Yahoo responses and absent Nasdaq matches are missing event metadata, not non-dividend observations. The remaining six-year event count is small and clustered by issuer, industry and calendar dates.
+
+The primary paper uses CRSP daily/monthly returns and dividend data for U.S. common shares on NYSE, Amex and Nasdaq, with monthly returns from 1927 through December 2011. Hartzmark and Solomon report abnormal returns throughout the interim period after announcement and before ex-date, including about **17 basis points** during that interval, and a negative **72 basis points** over the 40 days following ex-date. The article does not supply a post-2020 Dow-specific effect; its documented stronger price pressure among less-liquid stocks weakens rather than strengthens direct transfer to today’s very liquid mega-caps ([Hartzmark & Solomon (2013), JFE, DOI 10.1016/j.jfineco.2013.02.015](https://doi.org/10.1016/j.jfineco.2013.02.015)).
+
+A cross-market replication by Kreidl and Scholz studies **1,337 dividend events across 219 constituent stocks** in the German HDAX from March 2003–December 2017. Its event study uses a 150-day market-model estimation window and reports 1.79% cumulative abnormal return across the 45 days before ex-date, followed by partial reversal; the window is much longer than AL’s proposed five sessions and is not U.S. post-2020 Dow evidence ([“Exploiting the dividend month premium: evidence from Germany,” DOI 10.1057/s41260-021-00215-3](https://doi.org/10.1057/s41260-021-00215-3)).
+
+**Verdict: FAIL.** The reported issuer-event breadth is modest, clustered, and mostly lacks a public announcement date. The published effects do not directly match the proposed Dow event window.
+
+## 4. Effective breadth and power at a sourced plausible effect
+
+Hartzmark and Solomon’s 17 bp interim abnormal return is the closest documented effect, but it is an average event-period result in an older broad U.S. sample, not an IC and not a post-2020 mega-cap estimate. For a rough power check only, I set an event-window abnormal-return SD of **4%** (assumption), 30 Dow names, 1,500 sessions, a maximum of 162 publicly dated events (`event_rate=0.108` per session), event clustering shape 0.5, serial dependence ρ=0.8, and a planted event effect of 0.0017. With `r4_harness/power_sim.py`, event mode, 10,000 replications, horizon 5 (NW lag 4), and seed 20261111, simulated power to reach NW *t*≥2 is **15.53%** (Monte Carlo SE 0.00362), the mean number of active event dates is **139.75**, effective date count about **38.59**, and the 80%-power minimum detectable event effect is **0.01699** (1.70%).
+
+These are explicit design assumptions, not measured return moments or outcomes. The event-mode power simulation tests a mean event response, not a cross-sectional rank IC; because the literature does not provide the required Dow rank IC, it cannot be converted honestly into one. Treating all 162 public declarations as eligible also overstates usable events: an event must have been announced before its five-session formation window, and declaration-date mapping is incomplete. The design is therefore underpowered for the sourced 17 bp effect under these assumptions, with few independent event dates after serial and issuer clustering.
+
+**Verdict: FAIL.** At the documented effect, the synthetic power is low and the 80%-power MDE is an order of magnitude larger; the effect is not directly transferable to the Dow cross-section.
+
+## 5. Criterion-4 portfolio feasibility first
+
+One plausible Dow book would rebalance weekly, hold the **15 highest-ranked positive announced-event signals** against same-date EW30, require active share ≥50%, cap total-notional turnover at 50% each rebalance, and charge 0.05% per side on actual trades. Top-15 equal weights are exactly 50% active share under the shape audit. If fewer than 15 names have a publicly declared ex-date in the next five sessions, allocate only to eligible names and hold the remaining NAV in cash; if more than 15 qualify, rank by the frozen event-proximity rule. A turnover cap would carry forward unfilled positions, which can cause the strategy to miss the short-lived pre-ex-date window. This candidate definition is illustrative and not authorized for a run.
+
+The synthetic `report_drafts/CRITERION4_BOUND_BY_SHAPE.md` gives a weekly top-15 80%-power rank-IC hurdle of **0.101** and expected turnover **42%** at its high-persistence ρ=0.8 case; at ρ=0.2, the IC hurdle is **0.079** but modeled turnover rises to **87%**. These are planning bounds for 30-name weekly portfolios, six years, 0.05% cost per dollar of total traded notional, and a 24-test Holm first-step design—not empirical results. The source’s 17 bp event-period return cannot be mapped into these cross-sectional IC thresholds. At 0.05% per side, an event round-trip costs **10 bp** before impact; the historical 17 bp abnormal interim return would leave only **7 bp** before impact under the optimistic assumption it transfers unchanged to liquid Dow names. The study reports larger effects for less-liquid firms, so this transfer is doubtful. The remaining per-event edge does not establish the required positive net Dow excess return, higher Sharpe than EW30, or one-sided block-bootstrap p<0.05 after the growing Holm family.
+
+**Verdict: FAIL — criterion-4 feasibility is not established.** The most comparable short-window effect is gross and historical, its implied margin after stated costs is thin before impact, and it cannot be translated to the required weekly portfolio IC/Sharpe or Holm-adjusted bootstrap evidence.
+
+## 6. Holdout availability and protocol
+
+No holdout-specific input is needed for this screen, and no sealed holdout files or values were accessed. If a future direction passes development, the one-shot holdout procedure is coordinator-controlled under goal criterion 5; only roster and row-count availability checks may precede it, without reading prices or calculating signals. This proposal fails development overlap, input timing, power and criterion-4 gates and does not approach holdout consideration.
+
+**Verdict: PASS** for screen compliance; no holdout access occurred or is proposed.
+
+## Final screen decision
+
+- **Overall: STOP — FAIL.**
+- The literature supports pre-ex-date buying pressure in broad historical samples, but the staged data do not reliably establish when a future ex-date became public; the candidate largely duplicates R1’s own-stock dividend schedule; and the 17 bp event-period estimate is underpowered and too weakly mapped to the fixed cost-adjusted portfolio hurdle.
+- Evidence that could change the decision: complete point-in-time declaration timestamps and ex-dates for the entire Dow development roster; independent post-2020 U.S. mega-cap evidence for a five-session, announcement-to-ex-date cross-sectional effect; and a defensible portfolio-level mapping that clears criterion 4 after costs and Holm adjustment. These requirements should be met before any outcome access.
+- **Process disclosure:** while searching the decision registry for dividend-overlap entries, a broad search result exposed an R1 outcome summary line. I did not use or reproduce that result, and no project return, signal, or portfolio calculation was performed; I did not open any runner-result or Holm file. This disclosure is included for coordinator review because the task prohibited outcome access.
+- Reviewer/date: dispatched screen review, 2026-11-11.
+
+## Proposed replacement wording for the Task-spec brief contract in `ORCHESTRATION.md`
+
+> **Idea screening and file safety.** Before any signal pull or preregistration, complete `specs/IDEA_SCREEN_TEMPLATE.md`. The screen must establish novelty, exact signal and source, point-in-time coverage and independent breadth, power at an independently sourced plausible effect, criterion-4 portfolio feasibility after costs and Holm adjustment, and holdout availability. A failed gate ends the work; do not start a runner or register a variant. Task specs must name exact output paths using forward slashes and must say to check that each path does not exist before writing; never overwrite or reuse an existing artifact name. Worker data paths must begin no earlier than 2020-11-27. Do not inspect outcomes during screening or access sealed holdout values. If a path, date, or data rule is ambiguous, stop and request coordinator review before any pull.

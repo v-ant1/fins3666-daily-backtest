@@ -1,0 +1,6 @@
+﻿# R10 L2 trial log — power planning (tag L2)
+
+| Trial | Timestamp (local) | Planned computation | Inputs fixed before computation | Method / stopping rule | Outcome status |
+|---|---|---|---|---|---|
+| L2-P1 | 2026-11-12, before calculations | Synthetic 80%-power requirements for 2010-01..2015-12 (~1,510 sessions), S&P weekly/monthly rank-weighted top-half Cap50, Dow designs, and S&P additions (N~125, event SD 7.74%); analytic pass probabilities for DTC, adds, D1, J1, J2 after 50% effect haircut. | Only previously reported method/effect summaries: R7_POWER_GATE*.md; r9/S2_ROUND2.md, S2_2010_DESIGN.md, S2_ROUND3.md; S2_DEV_EVIDENCE.md; S2_INDEX_FLOW_RESULT.md; R9_D1_DIAGNOSIS.md; J2_ODDS_2016.md; COORDINATOR_TO_SUPERVISOR sections 9-30; HOLDOUT_RESULT.json. No raw price, return, or holdout data. | R7/R9 normal/HAC power calibration; family=1, one-sided alpha=.05; 80% z multiplier 1.64485+0.84162. Pass probabilities use normal noncentrality after effect haircut, require primary significance only unless an archived all-gate Monte Carlo already exists. No outcome data access. | Pre-logged; computation follows. |
+| L2-P1 | 2026-11-12 | Complete | Results written to `r10/L2/POWER_2010_2015.md`; calculation used only pre-existing reported summaries and stated assumptions; no holdout or raw pre-cutoff data accessed. |
