@@ -1,0 +1,10 @@
+{
+  "approach": "J1",
+  "passed": true,
+  "prereg_sha256": "996b971090be395fffb1e11dff1430bbf581b338637250716607bf6b51cb7698",
+  "mean_ic": -0.014786333277116828,
+  "nw_t_lag4": -2.0770415514093865,
+  "direction_adjusted_mean_ic": 0.014786333277116828,
+  "ic_floor": 0.0034641016,
+  "placebo_passed": true
+}

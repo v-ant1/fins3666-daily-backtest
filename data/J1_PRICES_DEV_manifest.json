@@ -1,0 +1,25 @@
+{
+  "output": "J1_PRICES_DEV.npz",
+  "sha256": "517f85becd0a07fa094a0492e5fe7b3f36170109082b249d5c8a3149d88f5584",
+  "development_window": [
+    "2020-06-01",
+    "2026-10-30"
+  ],
+  "sessions": 1614,
+  "sp500_assets": 622,
+  "sp500_pit_member_days": 812848,
+  "sp500_assets_with_any_prices": 571,
+  "dow_assets": 37,
+  "dow_pit_member_days": 48420,
+  "dow_assets_with_any_prices": 34,
+  "source_files": [
+    "r6_data/sp500_ohlcv_dev_gapfilled.parquet",
+    "r6_data/sp500_pit_roster.csv",
+    "r6_data/sp500_sic_panel.csv",
+    "r6_C1/dow_components_dev.parquet",
+    "r6_data/dow_dev_gapfill.parquet",
+    "r6_D1/dow_pit_roster.csv",
+    "S&P 500 adjusted open/close panel overlay for matching Dow names, 2026-06-29 through 2026-10-30"
+  ],
+  "construction": "adjusted_open = raw_open * adj_close / raw_close; adjusted close from adj_close; missing bars are NaN; no returns or outcomes computed; matching Dow price cells during 2026-06-29..2026-10-30 overlaid from the S&P 500 panel when a matching adjusted-price bar is present"
+}

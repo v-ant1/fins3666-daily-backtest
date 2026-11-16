@@ -1,0 +1,4 @@
+endpoint,raw_p,raw_gate_pass,holm_p,holm_decision,status,statistic
+R6-H7,0.0188988621812783,True,0.13229203526894812,retain,raw_gate,mean_direction_adjusted_IC=0.01478633328; NW_t_lag4=2.077041551; floor=0.0034641016
+R6-H8,0.001996007984031936,True,0.017964,reject,raw_gate,observed=0.01478633328; p95=0.005605976313; draws=500; seed=20261111
+R6-H9,0.4491101779644071,,1.0,retain,fail,net_excess=0.01027601936; bootstrap_draws=5000; seed=20261111
