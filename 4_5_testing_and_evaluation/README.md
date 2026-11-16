@@ -9,7 +9,7 @@ python compute_metrics.py      # writes metrics_summary.csv and yearly_returns.c
 
 | Report item | File |
 |---|---|
-| Table 4 (how J1 was developed) | [`figures/Table4_J1_development_path.png`](figures/Table4_J1_development_path.png) |
+| Table 4 (earlier vs final backtester) | [`figures/Table4_backtester_versions.png`](figures/Table4_backtester_versions.png) |
 | Table 5 (J1 full metrics) | [`figures/Table5_J1_backtest_results.png`](figures/Table5_J1_backtest_results.png) |
 | Figure 1 (equity curve) | [`figures/Figure1_J1_equity_curve.png`](figures/Figure1_J1_equity_curve.png) |
 | All metrics, every run, in-sample and out-of-sample | [`metrics/metrics_summary.csv`](metrics/metrics_summary.csv) |
@@ -65,32 +65,17 @@ Daily returns, 252 days a year, zero risk-free rate.
 | 2025 | 11.2% | 15.0% | −3.8% |
 | 2026 (to Oct) | 10.4% | 11.8% | −1.4% |
 
-## 3. How J1 was developed
+## 3. Earlier backtester iteration
 
-### Ideas tested before J1 (same signal test, development period)
+Our first backtester was built for the original heat-diffusion strategy. Its weaknesses (fixed Dow roster, no turnover cap, ~142% traded per rebalance, Sharpe below EW30) led to the rebuilt J1 backtester: point-in-time Dow membership, S&P 500 industry peers, SIC codes used only after SEC filing, a 50% turnover cap, and a signal test before any portfolio test.
 
-| Idea | What it tested | Mean IC / NW t | Placebo p | Outcome |
-|---|---|---|---:|---|
-| D1 | Daily short-volume pressure (FINRA) | 0.0094 / 1.91 | 0.002 | Near-miss |
-| E1 | Monthly industry-peer close-location pressure | −0.0045 / −0.24 | 0.81 | Failed |
-| **J1** | **Weekly reversal relative to industry peers** | **0.0148 / 2.08** | **0.002** | **Passed** |
-| R1 | Dividend-month premium | spread t 0.73 | 0.23 | Failed |
-| P1 | Overnight-return momentum | −0.0147 / −0.75 | 1.00 | Failed |
-| K1 | Earnings-announcement drift | 0.0003 / 0.03 | 0.77 | Failed |
-| G1 | High-volume return premium | 0.0018 / 0.19 | 0.71 | Failed |
-
-Full record: [`../archive/full_research_log/pivot_research/R6_FINAL.md`](../archive/full_research_log/pivot_research/R6_FINAL.md).
-
-### Backtest engines
-
-| Engine | Period | Net return (strategy / EW30) | Sharpe (strategy / EW30) | Traded per rebalance |
+| Backtester | Period | Net return (strategy / EW30) | Sharpe (strategy / EW30) | Traded per rebalance |
 |---|---|---:|---:|---:|
-| 1. Heat-diffusion backtester (original design) | 27 Nov 2020 – 23 Feb 2024 | 39.78% / 38.33% | 0.65 / 0.76 | 142% |
-| 1. Heat-diffusion backtester (original design) | 6 Dec 2024 – 31 Dec 2025 | 2.49% / 11.96% | 0.22 / 0.75 | 142% |
-| 2. J1 runner | 30 Nov 2020 – 30 Oct 2026 | 96.21% / 95.19% | 0.823 / 0.902 | 48% |
-| 3. Independent J1 replay | same as 2 | excess 0.94% (official 1.03%) | below EW30 | — |
+| Earlier (heat-diffusion) | 27 Nov 2020 – 23 Feb 2024 | 39.78% / 38.33% | 0.65 / 0.76 | 142% |
+| Earlier (heat-diffusion) | 6 Dec 2024 – 31 Dec 2025 | 2.49% / 11.96% | 0.22 / 0.75 | 142% |
+| Final (J1) | 27 Nov 2020 – 30 Oct 2026 | 96.21% / 95.19% | 0.823 / 0.902 | 48% |
 
-Engine 1 outputs: [`results/earlier_engine_heat_diffusion/`](results/earlier_engine_heat_diffusion/). To rerun it, from [`../archive/vedant_heat_diffusion_original/code/`](../archive/vedant_heat_diffusion_original/code/):
+Earlier-backtester outputs: [`results/earlier_engine_heat_diffusion/`](results/earlier_engine_heat_diffusion/). To rerun, from [`../archive/vedant_heat_diffusion_original/code/`](../archive/vedant_heat_diffusion_original/code/):
 
 ```
 python pressure_heat_backtest_daily.py --cost=actual --buffer=8
