@@ -1,0 +1,8 @@
+run,sample,period,net_cumulative_return,cagr,volatility,max_drawdown,var95_daily,es95_daily,sharpe,sortino,calmar,days,beta,alpha_annual,correlation,tracking_error,information_ratio,weekly_hit_rate,mean_turnover,cost_to_gross_edge,bootstrap_p,deflated_sharpe
+J1 official run,in-sample (development),2020-11-30 to 2026-10-30,0.9621,0.121,0.1531,-0.219,0.0148,0.0213,0.8229,1.2029,0.5526,1487,1.0372,-0.0012,0.921,0.0598,0.0563,0.4882,0.4817,0.6617,0.4491,
+EW30 benchmark (J1 run),in-sample (development),2020-11-30 to 2026-10-30,0.9519,0.12,0.1359,-0.2137,0.0128,0.0194,0.902,1.3169,0.5617,1487,,,,,,,,,,
+"J1 (V0), common window",in-sample (development),2021-03-05 to 2026-10-30,0.9564,0.1263,0.157,-0.2188,0.015,0.0218,0.836,1.2248,0.5771,1422,1.0247,0.004,0.9203,0.0615,0.1157,0.5035,0.5,0.5318,0.3913,
+"J2 (V5), common window",in-sample (development),2021-03-05 to 2026-10-30,1.3061,0.1596,0.1773,-0.2894,0.0162,0.0251,0.9239,1.3486,0.5516,1422,1.0247,0.0366,0.8149,0.1028,0.3859,0.5352,0.6966,0.2249,0.1884,
+EW30 benchmark (common window),in-sample (development),2021-03-05 to 2026-10-30,0.9048,0.121,0.141,-0.2137,0.0133,0.0199,0.8804,1.2889,0.5662,1422,,,,,,,,,,
+J2 holdout run,out-of-sample (holdout),2016-02-03 to 2020-10-30,0.7254,,,,,,0.6082,,,1196,,,,,,,,,0.4783,0.8397
+EW30 benchmark (holdout),out-of-sample (holdout),2016-02-03 to 2020-10-30,0.7781,,,,,,0.7273,,,1196,,,,,,,,,,

@@ -13,7 +13,7 @@ This repository holds the strategy, code and data behind our FINS3666 report. Fo
 |---|---|---|
 | 2. Data description | [`2_data/`](2_data/) | Index membership, industry codes, daily prices and the J1 scores (development period) |
 | 3. Strategy development | [`3_strategy_J1/`](3_strategy_J1/) | J1 design, score, trading rules, input-building code and the frozen specification |
-| 4. Testing and validation<br>5. Evaluation of results | [`4_5_testing_and_evaluation/`](4_5_testing_and_evaluation/) | The backtesters (main J1 runner and an independent replay) and the J1 results |
+| 4. Testing and validation<br>5. Evaluation of results | [`4_5_testing_and_evaluation/`](4_5_testing_and_evaluation/) | **All Section 4 results and metrics, in-sample vs out-of-sample**, the report tables/figures, the backtesters (original heat-diffusion engine, J1 runner, independent replay) |
 | 6. Strategy refinement | [`6_refinement_J2/`](6_refinement_J2/) | The 12 pre-logged variants, how J2 was selected, the code audit, and the one-time holdout result |
 | 7. Critical reflection | [`7_reflection_other_strategies/`](7_reflection_other_strategies/) | Other strategies tried (positive but not significant) and a summary of every attempt |
 | — | [`archive/`](archive/) | Vedant's original heat-diffusion backtest and the full research log |
