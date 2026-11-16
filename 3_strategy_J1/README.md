@@ -26,34 +26,13 @@ A stock needs at least one other peer to receive a score. A low score means the 
 4. **Cost:** 0.05% of each dollar traded, charged on actual trades.
 5. **Benchmark:** equal-weighted point-in-time Dow 30 (EW30).
 
-## Results (development period, 27 Nov 2020 to 30 Oct 2026)
-
-Source: [`results/RESULTS.md`](results/RESULTS.md).
-
-| Measure | J1 | EW30 |
-|---|---:|---:|
-| Net cumulative return | 96.21% | 95.19% |
-| Net excess return | +1.03% | — |
-| Net Sharpe ratio | 0.823 | 0.902 |
-| Maximum drawdown (net) | −21.90% | −21.37% |
-| Mean turnover per review | 48.2% | — |
-| Total trading costs | 10.36% | 0.49% |
-| Costs as a share of gross edge | 66.2% | — |
-
-| Signal test | Result |
-|---|---:|
-| Average rank correlation with next-week relative return | 0.0148 |
-| Newey-West t-statistic | 2.08 |
-| Placebo test p-value | 0.002 |
-
-**In plain terms:** the signal did predict which stocks would recover, but trading costs ate about two-thirds of the gross gain. J1 ended only slightly ahead of the benchmark on return, with a lower Sharpe ratio.
-
 ## Folder contents
 
 | Folder | Contents |
 |---|---|
-| [`code/`](code/) | `build_inputs.py` and `stage_j1_prices.py` build the signal and price inputs; `run_j1.py` runs the test; `test_j1_synthetic.py` checks the code on made-up data |
-| [`spec/`](spec/) | The specification, frozen before any results were seen |
-| [`results/`](results/) | Results, input quality checks and run notes |
+| [`code/`](code/) | `build_inputs.py` builds the J1 scores; `stage_j1_prices.py` prepares the price arrays; `test_j1_synthetic.py` checks the code on made-up data |
+| [`spec/`](spec/) | The J1 specification, frozen before any results were seen |
 
-The scripts were written for the original research folder layout, so file paths inside them may need adjusting to point at [`../data/`](../data/).
+The backtester and results are in [`../4_5_testing_and_evaluation/`](../4_5_testing_and_evaluation/); the refinement into J2 is in [`../6_refinement_J2/`](../6_refinement_J2/). Input data is in [`../2_data/`](../2_data/).
+
+The scripts were written for the original research folder layout, so file paths inside them may need adjusting to point at `../2_data/`.

@@ -1,0 +1,34 @@
+{
+  "period": {
+    "start": "2016-02-03",
+    "end": "2020-10-30",
+    "n_daily": 1196
+  },
+  "strategy_net_cumulative_return": 0.7254405801209578,
+  "ew30_net_cumulative_return": 0.7781364356386009,
+  "net_cumulative_excess": -0.05269585551764311,
+  "strategy_annualized_net_sharpe": 0.608176577779666,
+  "ew30_annualized_net_sharpe": 0.7273332163655775,
+  "one_sided_10_session_circular_bootstrap_p": 0.4783043391321736,
+  "dsr": 0.8397192237704542,
+  "dsr_primary_observed_12_stream_v": 0.8397192237704542,
+  "dsr_null_1_over_t_minus_1": 0.6256694635410882,
+  "dsr_primary_variance": 8.415393784762033e-05,
+  "dsr_null_variance": 0.0008368200836820083,
+  "dsr_deciding_choice": "primary_observed_12_stream_v",
+  "dsr_trial_count": 15,
+  "bootstrap": {
+    "draws": 5000,
+    "block_length": 10,
+    "seed": 20261111
+  },
+  "checks": {
+    "net_return_beats_ew30": false,
+    "net_sharpe_beats_ew30": false,
+    "one_sided_bootstrap_p_below_0_05": false,
+    "deflated_sharpe_above_0_95": false
+  },
+  "pass": false,
+  "approved_j2_sha256": "23968857b7ebd15502274400e9c0335583656051999626acd6e44de839a9cf80",
+  "holdout_rule": "R9 rule 6"
+}
