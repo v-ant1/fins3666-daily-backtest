@@ -43,3 +43,7 @@ All 12 variants are in [`results/R9_VARIANTS.md`](results/R9_VARIANTS.md).
 | [`code/check_j2.py`](code/check_j2.py) | Independent check of the variant results |
 
 The holdout price data is not included in this repository.
+
+## J2 holdout daily returns
+
+[`results/J2_holdout_daily_returns.csv`](results/J2_holdout_daily_returns.csv): date, J2 net return, EW30 net return for every holdout day (3 Feb 2016 – 30 Oct 2020, 1,196 days, net of 0.05% costs). It comes from a reporting-only re-run of the frozen J2 rule, used for the Section 5 risk table (Table 5b). The re-run reproduced `HOLDOUT_RESULT.json` exactly: J2 72.54%, EW30 77.81%.
